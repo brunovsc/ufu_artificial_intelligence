@@ -1,5 +1,6 @@
 import Dumb
 import BreadthSearch
+import DepthSearch
 from Classes import State
 from Classes import Robot
 
@@ -30,8 +31,7 @@ if option == 0:
 elif option == 1:
     resultState = BreadthSearch.breadth_first_search(state)
 elif option == 2:
-    print("TO DO")
-    # resultState = BreadthSearch.breadth_first_search(state)
+    resultState = DepthSearch.depth_first_search(state)
 else:
     print("Invalid option for method")
     exit(0)

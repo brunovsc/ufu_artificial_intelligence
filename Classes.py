@@ -32,6 +32,7 @@ class State:
             self.spaceConfiguration[self.robot.position] = "clean"
     
     def is_final_state(self):
+        print("Verifying final state as %s %s" % (self.spaceConfiguration[0], self.spaceConfiguration[1]))
         return self.spaceConfiguration[0] == "clean" and self.spaceConfiguration[1] == "clean"
 
     def equals_state(self, state_to_compare):
