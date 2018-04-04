@@ -14,8 +14,6 @@ def depth_first_search(state):
     def recursive_depth(state_to_explore, path=[]):
         path.append(state_to_explore)
         explored_states.append(state_to_explore)
-        print("EXPLORING %s %s %d" % (state_to_explore.spaceConfiguration[0], state_to_explore.spaceConfiguration[1], state_to_explore.robot.position))
-        input("Enter...")
         if state_to_explore.is_final_state():
             return state_to_explore
         for action in state_to_explore.robot.actions:
