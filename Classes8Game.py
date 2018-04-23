@@ -15,16 +15,19 @@ class State:
     actions = ["right", "down", "left", "up"]
     path = []
 
-    def __init__(self, configuration, white_space):
+    def __init__(self, configuration, white_space, heuristic = 0, cost = 0, predecessor = None):
         self.configuration = configuration
         self.white_space = white_space
+        self.heuristic = heuristic
+        self.cost = cost
+        self.evaluation = self.heuristic + self.cost
+        self.predecessor = predecessor
         return
 
     def is_final(self):
-        for i in range(2):
-            for j in range(2):
-                if self.configuration[i] != self.final_state[i]:
-                    return False
+        for i in range(8):
+            if self.configuration[i] != self.final_state[i]:
+                return False
         return True
 
     def available_actions(self):
@@ -60,7 +63,7 @@ class State:
             new_configuration[self.white_space - 1] = 0
             white_space = self.white_space - 1
 
-        return State(new_configuration, white_space)
+        return new_configuration, white_space
 
     def print_configuration(self):
         print("%d %d %d" % (self.configuration[0], self.configuration[1], self.configuration[2]))

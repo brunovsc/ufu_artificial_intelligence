@@ -1,5 +1,6 @@
 from Classes8Game import Position
-
+from Classes8Game import State
+import operator
 
 def heuristic_1(configuration):
     final_state = [0, 1, 2, 3, 4, 5, 6, 7, 8]
@@ -36,46 +37,63 @@ def heuristic_2(configuration):
 def a_star(start):
     closed_set = []
     open_set = [start]
-    came_from = {}
-    g_score = {}
-    g_score[start] = 0
 
-    f_score = {}
-    f_score[start] = heuristic_1(start.configuration)
+    start.heuristic = heuristic_2(start.configuration)
+    start.cost = 0
 
     while len(open_set) > 0:
 
-        for i in open_set:
-            print(i)
-
-        input("")
+        open_set.sort(key=operator.attrgetter('evaluation'))
         current = open_set.pop(0)
+
         if current.is_final():
-            return reconstruct_path(came_from, current)
+            return reconstruct_path(current)
 
         closed_set.append(current)
 
         for action in current.available_actions():
-            new_state = current.move(action)
-            if new_state in closed_set:
+            new_configuration, new_white_space = current.move(action)
+
+            new_heuristic = heuristic_2(new_configuration)
+            new_cost = current.cost + 1
+            new_state = State(new_configuration, new_white_space, new_heuristic, new_cost, current)
+
+            if new_state.is_final():
+                return reconstruct_path(new_state)
+
+            already_closed = False
+            for closed_state in closed_set:
+                if closed_state.configuration == new_state.configuration:
+                    already_closed = True
+                    break
+
+            if already_closed:
                 continue
-            if new_state not in open_set:
+
+            already_opened = False
+            state_opened = None
+            for opened_state in open_set:
+                if opened_state.configuration == new_state.configuration:
+                    already_opened = True
+                    state_opened = opened_state
+                    break
+
+            if already_opened:
+                if new_state.evaluation < state_opened.evaluation:
+                    open_set.remove(state_opened)
+                    open_set.append(new_state)
+            else:
                 open_set.append(new_state)
 
-            tentative_g_score = g_score[current] + 1
-            if new_state in g_score:
-                if tentative_g_score >= g_score[new_state]:
-                    continue
+            #new_state.print_configuration()
 
-            came_from[new_state] = current
-            g_score[new_state] = tentative_g_score
-            f_score[new_state] = g_score[new_state] + heuristic_1(new_state.configuration)
+        #exit(0)
 
     return None
 
-def reconstruct_path(came_from, current):
+def reconstruct_path(current):
     total_path = [current]
-    while current in came_from.keys():
-        current = came_from[current]
+    while current.predecessor != None:
+        current = current.predecessor
         total_path.append(current)
     return total_path

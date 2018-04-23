@@ -7,6 +7,7 @@ print("Eight pieces game: ")
 
 # numbers = initial_state.split(" ")
 # configuration = [0, 1, 2, 3, 4, 5, 6, 7, 8]
+# configuration = [1, 0, 2, 3, 4, 5, 6, 7, 8]
 configuration = [7, 8, 5, 4, 0, 6, 1, 2, 3]
 #
 # for i in range(len(numbers)):
