@@ -1,50 +1,81 @@
+from Classes8Game import Position
 
 
-def a_star(start_state):
+def heuristic_1(configuration):
+    final_state = [0, 1, 2, 3, 4, 5, 6, 7, 8]
+    accumulator = 0
+    for i in range(8):
+        if configuration[i] != final_state[i]:
+            accumulator += 1
+    return accumulator
+
+
+def heuristic_2(configuration):
+    accumulator = 0
+    for i in range(8):
+        if configuration[i] == 0:
+            accumulator += abs(i - 0)
+        elif configuration[i] == 1:
+            accumulator += abs(i - 1)
+        elif configuration[i] == 2:
+            accumulator += abs(i - 2)
+        elif configuration[i] == 3:
+            accumulator += abs(i - 3)
+        elif configuration[i] == 4:
+            accumulator += abs(i - 4)
+        elif configuration[i] == 5:
+            accumulator += abs(i - 5)
+        elif configuration[i] == 6:
+            accumulator += abs(i - 6)
+        elif configuration[i] == 7:
+            accumulator += abs(i - 7)
+        else:  # 8
+            accumulator += abs(i - 8)
+    return accumulator
+
+def a_star(start):
     closed_set = []
-    open_set = [start_state]
-
+    open_set = [start]
     came_from = {}
-    cost_to_state = {}
+    g_score = {}
+    g_score[start] = 0
 
-    came_from[start_state] = None
-    cost_to_state[start_state] = 0
+    f_score = {}
+    f_score[start] = heuristic_1(start.configuration)
 
     while len(open_set) > 0:
-        current_state = open_set.pop(0)
-        if current_state.is_final():
-            break
 
-        for action in current_state.white_space.available_actions():
-            new_state = current_state.white_space.move(action)
-            new_cost = cost_to_state[current_state] + 1
-            if new_state not in cost_to_state or new_cost < cost_to_state[new_state]:
-                cost_to_state[new_state] = new_cost
+        for i in open_set:
+            print(i)
 
+        input("")
+        current = open_set.pop(0)
+        if current.is_final():
+            return reconstruct_path(came_from, current)
 
+        closed_set.append(current)
 
+        for action in current.available_actions():
+            new_state = current.move(action)
+            if new_state in closed_set:
+                continue
+            if new_state not in open_set:
+                open_set.append(new_state)
 
+            tentative_g_score = g_score[current] + 1
+            if new_state in g_score:
+                if tentative_g_score >= g_score[new_state]:
+                    continue
 
-def a_star_search(graph, start, goal):
-    frontier = PriorityQueue()
-    frontier.put(start, 0)
-    came_from = {}
-    cost_so_far = {}
-    came_from[start] = None
-    cost_so_far[start] = 0
+            came_from[new_state] = current
+            g_score[new_state] = tentative_g_score
+            f_score[new_state] = g_score[new_state] + heuristic_1(new_state.configuration)
 
-    while not frontier.empty():
-        current = frontier.get()
+    return None
 
-        if current == goal:
-            break
-
-        for next in graph.neighbors(current):
-            new_cost = cost_so_far[current] + graph.cost(current, next)
-            if next not in cost_so_far or new_cost < cost_so_far[next]:
-                cost_so_far[next] = new_cost
-                priority = new_cost + heuristic(goal, next)
-                frontier.put(next, priority)
-                came_from[next] = current
-
-    return came_from, cost_so_far
+def reconstruct_path(came_from, current):
+    total_path = [current]
+    while current in came_from.keys():
+        current = came_from[current]
+        total_path.append(current)
+    return total_path

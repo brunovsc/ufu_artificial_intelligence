@@ -1,53 +1,3 @@
-class State:
-    finalState = [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
-
-    def __init__(self, configuration):
-        self.configuration = configuration
-        for i in range(2):
-            for j in range(2):
-                if self.configuration[i][j] == 0:
-                    self.white_space = WhiteSpace(Position(i, j))
-        return
-
-    def heuristic_1(self):
-        accumulator = 0
-        for i in range(2):
-            for j in range(2):
-                if self.configuration[i][j] != self.finalState[i][j]:
-                    accumulator += 1
-        return accumulator
-
-    def heuristic_2(self):
-        accumulator = 0
-        for i in range(2):
-            for j in range(2):
-                if self.configuration[i][j] == 0:
-                    accumulator += Position(i, j).distance_to(Position(0, 0))
-                elif self.configuration[i][j] == 1:
-                    accumulator += Position(i, j).distance_to(Position(0, 1))
-                elif self.configuration[i][j] == 2:
-                    accumulator += Position(i, j).distance_to(Position(0, 2))
-                elif self.configuration[i][j] == 3:
-                    accumulator += Position(i, j).distance_to(Position(1, 0))
-                elif self.configuration[i][j] == 4:
-                    accumulator += Position(i, j).distance_to(Position(1, 1))
-                elif self.configuration[i][j] == 5:
-                    accumulator += Position(i, j).distance_to(Position(1, 2))
-                elif self.configuration[i][j] == 6:
-                    accumulator += Position(i, j).distance_to(Position(2, 0))
-                elif self.configuration[i][j] == 7:
-                    accumulator += Position(i, j).distance_to(Position(2, 1))
-                else:  # 8
-                    accumulator += Position(i, j).distance_to(Position(2, 2))
-        return accumulator
-
-    def is_final(self):
-        for i in range(2):
-            for j in range(2):
-                if self.configuration[i][j] != self.finalState[i][j]:
-                    return False
-        return True
-
 
 class Position:
     def __init__(self, position_x, position_y):
@@ -60,29 +10,61 @@ class Position:
         return distance
 
 
-class WhiteSpace:
+class State:
+    final_state = [0, 1, 2, 3, 4, 5, 6, 7, 8]
     actions = ["right", "down", "left", "up"]
     path = []
 
-    def __init__(self, position=Position(1, 1)):
-        self.position = position
+    def __init__(self, configuration, white_space):
+        self.configuration = configuration
+        self.white_space = white_space
         return
+
+    def is_final(self):
+        for i in range(2):
+            for j in range(2):
+                if self.configuration[i] != self.final_state[i]:
+                    return False
+        return True
 
     def available_actions(self):
         current_actions = list(self.actions)
-        if self.position.positionX == 0:  # white space is in left column
-            current_actions.remove("left")
-        elif self.position.positionX == 2:  # white space is in right column
-            current_actions.remove("right")
-
-        if self.position.positionY == 0:  # white space is in top row
+        if self.white_space == 0 or self.white_space == 1 or self.white_space == 2:  # white space is in top row
             current_actions.remove("up")
-        elif self.position.positionY == 2:  # white space is in bottom row
+        if self.white_space == 6 or self.white_space == 7 or self.white_space == 8:  # white space is in bottom row
             current_actions.remove("down")
+        if self.white_space == 0 or self.white_space == 3 or self.white_space == 6:  # white space is in left column
+            current_actions.remove("left")
+        if self.white_space == 2 or self.white_space == 5 or self.white_space == 8:  # white space is in right column
+            current_actions.remove("right")
 
         return current_actions
 
     def move(self, action):
-        self.path.append(action)
-        return
+        new_configuration = list(self.configuration)
+        white_space = self.white_space
+        if action == "up":
+            new_configuration[self.white_space] = new_configuration[self.white_space - 3]
+            new_configuration[self.white_space - 3] = 0
+            white_space = self.white_space - 3
+        elif action == "down":
+            new_configuration[self.white_space] = new_configuration[self.white_space + 3]
+            new_configuration[self.white_space + 3] = 0
+            white_space = self.white_space + 3
+        elif action == "right":
+            new_configuration[self.white_space] = new_configuration[self.white_space + 1]
+            new_configuration[self.white_space + 1] = 0
+            white_space = self.white_space + 1
+        elif action == "left":
+            new_configuration[self.white_space] = new_configuration[self.white_space - 1]
+            new_configuration[self.white_space - 1] = 0
+            white_space = self.white_space - 1
 
+        return State(new_configuration, white_space)
+
+    def print_configuration(self):
+        print("%d %d %d" % (self.configuration[0], self.configuration[1], self.configuration[2]))
+        print("%d %d %d" % (self.configuration[3], self.configuration[4], self.configuration[5]))
+        print("%d %d %d" % (self.configuration[6], self.configuration[7], self.configuration[8]))
+        print("-----")
+        return
