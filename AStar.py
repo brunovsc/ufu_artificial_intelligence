@@ -2,6 +2,7 @@ from Classes8Game import Position
 from Classes8Game import State
 import operator
 
+
 def heuristic_1(configuration):
     final_state = [0, 1, 2, 3, 4, 5, 6, 7, 8]
     accumulator = 0
@@ -30,16 +31,26 @@ def heuristic_2(configuration):
             accumulator += abs(i - 6)
         elif configuration[i] == 7:
             accumulator += abs(i - 7)
-        else:  # 8
+        else:
             accumulator += abs(i - 8)
     return accumulator
 
-def a_star(start):
+
+def apply_heuristic(heuristic, configuration):
+    if heuristic == 1:
+        return heuristic_1(configuration)
+    else:
+        return heuristic_2(configuration)
+
+
+def a_star(start, heuristic):
     closed_set = []
     open_set = [start]
 
-    start.heuristic = heuristic_2(start.configuration)
+    start.heuristic = apply_heuristic(heuristic, start.configuration)
     start.cost = 0
+
+    states_generated = 0
 
     while len(open_set) > 0:
 
@@ -54,12 +65,14 @@ def a_star(start):
         for action in current.available_actions():
             new_configuration, new_white_space = current.move(action)
 
-            new_heuristic = heuristic_2(new_configuration)
+            states_generated += 1
+
+            new_heuristic = apply_heuristic(heuristic, new_configuration)
             new_cost = current.cost + 1
             new_state = State(new_configuration, new_white_space, new_heuristic, new_cost, current)
 
             if new_state.is_final():
-                return reconstruct_path(new_state)
+                return reconstruct_path(new_state), states_generated, len(closed_set)
 
             already_closed = False
             for closed_state in closed_set:
@@ -85,15 +98,12 @@ def a_star(start):
             else:
                 open_set.append(new_state)
 
-            #new_state.print_configuration()
+    return None, None, None
 
-        #exit(0)
-
-    return None
 
 def reconstruct_path(current):
     total_path = [current]
-    while current.predecessor != None:
+    while current.predecessor is not None:
         current = current.predecessor
         total_path.append(current)
     return total_path
