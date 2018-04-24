@@ -3,7 +3,6 @@ from Classes import State
 
 
 def depth_first_search(state):
-
     def state_not_explored(state_to_explore):
         flag = False
         for explored in explored_states:
@@ -22,10 +21,7 @@ def depth_first_search(state):
             if state_not_explored(new_state):
                 return recursive_depth(new_state)
 
-        
-
     explored_states = []
     solution = recursive_depth(state)
-    
-    return solution
 
+    return solution

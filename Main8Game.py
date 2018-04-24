@@ -1,4 +1,5 @@
 import AStar
+import DepthSearch8Game
 from Classes8Game import State
 
 print("Eight pieces game!\n==================")
@@ -48,8 +49,8 @@ if method == 1:
 elif method == 2:
     final_path, generated_states, explored_states = AStar.a_star(start_state, 2)
 elif method == 3:
-    print("TO DO")
-    # final_path, generated_states, explored_states = DepthSearch.depth_search(start_state)
+    # print("TO DO")
+    final_path, generated_states, explored_states = DepthSearch8Game.depth_first_search(start_state)
 elif method == 4:
     final_path_h1, generated_states_h1, explored_states_h1 = AStar.a_star(start_state, 1)
     print("A* (h1) - Done !")
