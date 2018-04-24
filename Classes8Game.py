@@ -12,7 +12,8 @@ class Position:
 
 class State:
     final_state = [0, 1, 2, 3, 4, 5, 6, 7, 8]
-    actions = ["right", "down", "left", "up"]
+    #actions = ["right", "down", "left", "up"]
+    actions = ["up", "left", "down", "right"]
     path = []
 
     def __init__(self, configuration, white_space, heuristic = 0, cost = 0, predecessor = None):
@@ -23,6 +24,12 @@ class State:
         self.evaluation = self.heuristic + self.cost
         self.predecessor = predecessor
         return
+
+    def __lt__(self, other):
+        if self.evaluation != other.evaluation:
+            return self.evaluation < other.evaluation
+        else:
+            return self.configuration < other.configuration
 
     def is_final(self):
         for i in range(8):

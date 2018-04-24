@@ -1,10 +1,11 @@
 from Classes8Game import Position
 from Classes8Game import State
 import operator
+import heapq
 
 
 def heuristic_1(configuration):
-    final_state = [0, 1, 2, 3, 4, 5, 6, 7, 8]
+    final_state = [1, 2, 3, 4, 5, 6, 7, 8, 0]
     accumulator = 0
     for i in range(8):
         if configuration[i] != final_state[i]:
@@ -36,36 +37,44 @@ def heuristic_2(configuration):
     return accumulator
 
 
+def heuristic_3(configuration):
+    return heuristic_1(configuration) + heuristic_2(configuration)
+
+
+
 def apply_heuristic(heuristic, configuration):
     if heuristic == 1:
         return heuristic_1(configuration)
-    else:
+    elif heuristic == 2:
         return heuristic_2(configuration)
+    else:
+        return heuristic_3(configuration)
 
 
 def a_star(start, heuristic):
-    closed_set = []
-    open_set = [start]
+    closed_set = {}
+    open_set = []
 
     start.heuristic = apply_heuristic(heuristic, start.configuration)
+    heapq.heappush(open_set, start)
     start.cost = 0
 
-    states_generated = 0
+    states_generated = 1
 
     while len(open_set) > 0:
 
-        open_set.sort(key=operator.attrgetter('evaluation'))
-        current = open_set.pop(0)
+        current = heapq.heappop(open_set)
+        # open_set.sort(key=operator.attrgetter('evaluation'))
+        # current = open_set.pop(0)
+        #print("Current evaluation %d - Current depth %d " % (current.evaluation, current.cost))
 
         if current.is_final():
             return reconstruct_path(current)
 
-        closed_set.append(current)
+        closed_set[repr(current.configuration)] = 1
 
         for action in current.available_actions():
             new_configuration, new_white_space = current.move(action)
-
-            states_generated += 1
 
             new_heuristic = apply_heuristic(heuristic, new_configuration)
             new_cost = current.cost + 1
@@ -74,31 +83,32 @@ def a_star(start, heuristic):
             if new_state.is_final():
                 return reconstruct_path(new_state), states_generated, len(closed_set)
 
-            already_closed = False
-            for closed_state in closed_set:
-                if closed_state.configuration == new_state.configuration:
-                    already_closed = True
-                    break
+            # already_closed = False
+            # for closed_state in closed_set:
+            #     if closed_state.configuration == new_state.configuration:
+            #         already_closed = True
+            #         break
 
-            if already_closed:
+            if repr(new_state.configuration) in closed_set:
                 continue
 
-            already_opened = False
-            state_opened = None
-            for opened_state in open_set:
-                if opened_state.configuration == new_state.configuration:
-                    already_opened = True
-                    state_opened = opened_state
-                    break
+            # already_opened = False
+            # state_opened = None
+            # for opened_state in open_set:
+            #     if opened_state.configuration == new_state.configuration:
+            #         already_opened = True
+            #         state_opened = opened_state
+            #         break
 
-            if already_opened:
-                if new_state.evaluation < state_opened.evaluation:
-                    open_set.remove(state_opened)
-                    open_set.append(new_state)
-            else:
-                open_set.append(new_state)
+            # if already_opened:
+            #     if new_state.evaluation < state_opened.evaluation:
+            #         open_set.remove(state_opened)
+            #         open_set.append(new_state)
+            # else:
+            states_generated += 1
+            heapq.heappush(open_set, new_state)
 
-    return None, None, None
+    return None, states_generated, len(closed_set)
 
 
 def reconstruct_path(current):
