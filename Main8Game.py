@@ -7,13 +7,13 @@ initial_state = input("Initial state (different numbers from 0 to 8): ")
 if len(initial_state) == 0:
     # configuration = [7, 8, 5, 4, 0, 6, 1, 2, 3]  # class example
     # configuration = [7, 2, 4, 5, 0, 6, 8, 3, 1]  # class example
-    configuration = [8, 3, 1, 5, 4, 2, 0, 7, 6]
+    # configuration = [8, 3, 1, 5, 4, 2, 0, 7, 6]
     # configuration = [0, 1, 2, 3, 4, 5, 6, 7, 8]
     # configuration = [1, 2, 0, 3, 4, 5, 6, 7, 8]
     # configuration = [4, 6, 1, 2, 0, 7, 5, 8, 3]  # didn't stop
     # configuration = [3, 8, 6, 1, 4, 2, 0, 7, 5]
     # configuration = [0, 8, 7, 4, 6, 2, 1, 5, 3]
-    # configuration = [8, 7, 6, 5, 4, 3, 2, 1, 0]  # depth 28
+    configuration = [8, 7, 6, 5, 4, 3, 2, 1, 0]  # depth 28
     # configuration = [1, 2, 3, 7, 8, 0, 6, 5, 4]  # didn't stop
     # configuration = [1, 4, 2, 3, 5, 0, 6, 7, 8]
     print("\nUsing debug configuration: ")
