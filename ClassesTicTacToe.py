@@ -2,13 +2,15 @@ class State:
 	initial_state = [0, 0, 0, 0, 0, 0, 0, 0, 0]
 	path = []
 
-	def __init__(self, configuration, marker):
+	def __init__(self, configuration, marker, parent = None, child = None):
 		self.configuration = configuration
 		self.marker = marker
+		self.parent = parent
+		self.child = child
 		return
 
 	def avaliation(self):
-		for i in range(8):
+		for i in range(0, 9):
 			if self.configuration[i] == 0:
 				return (False, 0) # NOT END GAME
 
@@ -58,7 +60,7 @@ class State:
 
 	def available_actions(self):
 		available_positions = []
-		for i in range(8):
+		for i in range(0, 9):
 			if self.configuration[i] == 0:
 				available_positions.append(i)
 
