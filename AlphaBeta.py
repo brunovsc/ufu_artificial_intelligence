@@ -2,6 +2,7 @@ import math
 from ClassesTicTacToe import State
 
 def alpha_beta(initial_state):
+	initial_state.draw_board()
 	v = alpha_beta_max(initial_state, -99, 99)
 	return v
 

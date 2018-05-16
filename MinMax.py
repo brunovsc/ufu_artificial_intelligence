@@ -2,9 +2,9 @@ import math
 from ClassesTicTacToe import State
 
 def minimax(initial_state):
+	initial_state.draw_board()
 	v = minimax_max(initial_state)
 	return v
-
 
 def minimax_max(state):
 	state_avaliation = state.avaliation()
