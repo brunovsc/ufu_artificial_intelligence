@@ -10,10 +10,6 @@ class State:
 		return
 
 	def avaliation(self):
-		for i in range(0, 9):
-			if self.configuration[i] == 0:
-				return (False, 0) # NOT END GAME
-
 		if self.configuration[0] == self.configuration[1] == self.configuration[2]:
 			if self.configuration[0] == 1:
 				return (True, 10)
@@ -54,6 +50,10 @@ class State:
 				return (True, 10)
 			elif self.configuration[4] == -1:
 				return (True, -10)
+
+		for i in range(0, 9):
+			if self.configuration[i] == 0:
+				return (False, 0) # NOT END GAME
 
 		return (True, 0) # DRAW
 

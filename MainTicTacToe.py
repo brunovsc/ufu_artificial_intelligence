@@ -34,7 +34,7 @@ print("TIC TAC TOE")
 #state = State([1,-1,1,0,0,0,-1,0,0], 1) # DRAW
 #state = State([1,-1,1,-1,1,-1,-1,1,-1], 1) # DRAW
 state = State([0,0,0,0,0,0,0,0,0], 1) # DRAW
-state = State([1,-1,1,0,1,0,-1,0,-1], 1) # DRAW
+#state = State([1,-1,1,0,1,0,-1,0,-1], 1) # DRAW
 
 resultValue = None
 path = None
@@ -43,7 +43,7 @@ player = 1
 
 while True:
     #state = State(board, player) # DRAW
-    option = input("Choose a method:\n1 - Minimax\n2 - AlphaBeta\n0 - Exit\nOption -> ")
+    option = input("Choose a method:\n1 - Minimax\n2 - AlphaBeta\n3 - Play Against Minimax\n4 - Play Against AlphaBeta\n0 - Exit\nOption -> ")
     option = int(option)
     timeSpent = time.time()
     if option == 1:
@@ -51,6 +51,18 @@ while True:
     elif option == 2:
         resultValue, path = AlphaBeta.alpha_beta(state)
     elif option == 3:
+        first = input("Who plays first? (me, computer): ")
+        if(first == 'me'):
+            resultValue, path = MinMax.play_against(state, True)
+        else :
+            resultValue, path = MinMax.play_against(state, False)
+    elif option == 4:
+        first = input("Who plays first? (me, computer): ")
+        if(first == 'me'):
+            resultValue, path = AlphaBeta.play_against(state, True)
+        else :
+            resultValue, path = AlphaBeta.play_against(state, False)
+    elif option == 5:
         for i in range (0,3):
             for j in range (0,3):
                 value = input("Position [%d,%d]: "%(i, j))
@@ -75,6 +87,7 @@ while True:
         print_path(path)
         print("LOSS")
     else:
+        print(resultValue)
         print("404 - Solution not found")
     print("TIME SPENT: ", timeSpent)
 
