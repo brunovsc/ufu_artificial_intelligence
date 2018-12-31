@@ -29,12 +29,13 @@ print("TIC TAC TOE")
 #state = State([1,-1,1,0,1,0,-1,0,-1], 1)
 #state = State([1,-1,1,-1,1,-1,0,0,0], 1) # DRAW
 #state = State([1,0,1,-1,1,0,-1,0,0], 1) # WIN (3 plays)
-#state = State([-1,0,-1,1,-1,1,0,1,0], 1) # LOSS
+state = State([-1,0,-1,1,-1,1,0,1,0], 1) # LOSS
 #state = State([1,-1,1,0,1,0,-1,0,-1], 1) # DRAW
 #state = State([1,-1,1,0,0,0,-1,0,0], 1) # DRAW
 #state = State([1,-1,1,-1,1,-1,-1,1,-1], 1) # DRAW
-state = State([0,0,0,0,0,0,0,0,0], 1) # DRAW
+#state = State([0,0,0,0,-1,0,0,0,0], 1) # DRAW
 #state = State([1,-1,1,0,1,0,-1,0,-1], 1) # DRAW
+state.draw_board()
 
 resultValue = None
 path = None
